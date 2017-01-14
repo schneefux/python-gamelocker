@@ -8,3 +8,4 @@ Dead-simple Python wrapper for the Gamelocker API.
 """
 
 from .api import *
+from .janus import *
