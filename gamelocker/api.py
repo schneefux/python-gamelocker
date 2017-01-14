@@ -9,6 +9,7 @@ This module implements the Gamelocker API.
 """
 
 import inspect
+import datetime
 import requests
 import requests_jwt
 import gamelocker.datatypes
@@ -139,7 +140,10 @@ class Gamelocker(object):
         """
         return self._get("players", elid)
 
-    def matches(self, limit=None, offset=None, sort=None):
+    def matches(self,
+                limit=None, offset=None, sort=None,
+                player=None, team=None,
+                createdAtStart=None, createdAtEnd=None):
         """Returns a list of recent matches.
 
         :param limit: Maximum number of matches to return.
@@ -148,6 +152,10 @@ class Gamelocker(object):
         :type limit: int
         :param sort: Sort query to use.
         :type sort: str
+        :param createdAtStart: Earliest createdAt time.
+        :type createdAtStart: `datetime.datetime` or str
+        :param createdAtEnd: Latest createdAt time.
+        :type createdAtEnd: `datetime.datetime` or str
         :return: List of matches.
         :rtype: list of dict
         """
@@ -159,4 +167,17 @@ class Gamelocker(object):
             params["page[offset]"] = offset
         if sort:  # TODO make this nice and usable
             params["sort"] = sort
+        if player:
+            params["filter[playerName]"] = player
+        if team:
+            params["filter[teamName]"] = team
+        if createdAtStart:
+            if isinstance(createdAtStart, datetime.datetime):
+                createdAtStart = createdAtStart.isoformat()
+            params["filter[createdAt-start]"] = createdAtStart
+        if createdAtEnd:
+            if isinstance(createdAtEnd, datetime.datetime):
+                createdAtEnd = createdAtEnd.isoformat()
+            params["filter[createdAt-end]"] = createdAtEnd
+
         return self._get("matches", params=params)

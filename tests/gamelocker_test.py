@@ -3,6 +3,7 @@
 import pytest
 import requests
 import gamelocker
+import datetime
 
 class TestGamelocker:
     apikey = "aaa.bbb.ccc"
@@ -29,12 +30,49 @@ class TestGamelocker:
         assert isinstance(match.rosters[0].participants[0].player, gamelocker.datatypes.Player)
         assert isinstance(match.rosters[0].participants[0].player.name, str)
 
+    def test_matches(self, api):
         matches = api.matches()
         assert len(matches) > 0
         assert isinstance(matches[0], gamelocker.datatypes.Match)
         assert matches[0].duration > 0
 
+    def test_matchesfilters(self, api):
         assert len(api.matches(limit=5)) == 5
+
+        # TODO uncomment as soon as the API is up
+#        matches = api.matches(limit=10, sort="duration")
+#        assert matches[0].duration < matches[9].duration
+
+        def fromiso(s):
+            return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ")
+
+        start = "2017-01-11T02:25:00Z"
+        end = "2017-01-11T02:30:00Z"
+        matches = api.matches(createdAtStart=start, createdAtEnd=end)
+        for match in matches:
+            assert fromiso(end) >= fromiso(match.createdAt) >= fromiso(start)
+
+#        nick = "MMotooks123"
+#        matches = api.matches(limit=5, player=nick)
+#        for match in matches:
+#            success = False
+#            for roster in match.rosters:
+#                for participant in roster.participants:
+#                    if participant.player.name == nick:
+#                        success = True
+#                        break
+#            assert success
+#
+#        team = "HALO"
+#        matches = api.matches(limit=5, team=team)
+#        for match in matches:
+#            success = False
+#            for roster in match.rosters:
+#                if roster.team:
+#                    if roster.team.name == team:
+#                        success = True
+#                        break
+#            assert success
 
     def test_player(self, api):
         assert api.player("6abb30de-7cb8-11e4-8bd3-06eb725f8a76").name == "boombastic04"
