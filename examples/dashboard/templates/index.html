@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="utf-8">
+        <title>Vainglory API demo</title>
+    </head>
+    <body>
+        <div id="gameType" style="height: 100%; width: 400px;"></div>
+        <div id="players" style="height: 100%; width: 400px;"></div>
+        <div id="picks" style="height: 100%; width: 400px;"></div>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <script src="http://code.highcharts.com/highcharts.js"></script>
+        <script>
+            $(function () {
+                Highcharts.chart("gameType", {
+                    chart: {
+                        type: "pie"
+                    },
+                    title:  {
+                        text: "Game modes over the last {{ number }} matches"
+                    },
+                    series: [{
+                        data: {{ gameModes|tojson|safe }}
+                    }]
+                });
+                Highcharts.chart("players", {
+                    chart: {
+                        type: "bar"
+                    },
+                    xAxis: {
+                        categories: ["matches"]
+                    },
+                    title:  {
+                        text: "Most active players"
+                    },
+                    series: {{ players|tojson|safe }}
+                });
+                Highcharts.chart("picks", {
+                    chart: {
+                        type: "column"
+                    },
+                    title:  {
+                        text: "Popular picks"
+                    },
+                    plotOptions: {
+                        column: {
+                            stacking: "normal"
+                        }
+                    },
+                    xAxis: {
+                        categories: {{ heroes|tojson|safe }}
+                    },
+                    series: {{ picks|tojson|safe }}
+                });
+            });
+        </script>
+    </body>
+</html>
