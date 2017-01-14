@@ -779,13 +779,15 @@ class DataMessage(object): #JSON API Data Object see: http://jsonapi.org/format/
             msg.map_message(data)
             return msg
         
-    def update_object(self,obj):
+    def update_object(self,obj,useids=True):
         """
         Used to set values from a DataMessage that were updated (self.__updated == True),
         as specified in the Attribute objects of the sub class of this, to the values of
         the backend object that matches this DataMessage Object.
         So in other words, this is the data mapping from DataMessage to backend object.
         Read-Only Attributes are also skipped.
+
+        If useids==True (default), relations will be replaced by their respective IDs.
         """
         
         attributes = {attr:object.__getattribute__(self,attr)
@@ -845,10 +847,16 @@ class DataMessage(object): #JSON API Data Object see: http://jsonapi.org/format/
                            
             #extract ids and set to object            
             if isinstance(object.__getattribute__(self,attr).value,(list,tuple)):
-                ids = [r.id for r in object.__getattribute__(self,attr).value]                
-                setattr(attr_obj, actual_attr, ids)
+                if useids:
+                    vals = [r.id for r in object.__getattribute__(self,attr).value]                
+                else:
+                    vals = object.__getattribute__(self,attr).value
+                setattr(attr_obj, actual_attr, vals)
             else:
-                setattr(attr_obj, actual_attr, object.__getattribute__(self,attr).value.id)
+                if useids:
+                    setattr(attr_obj, actual_attr, object.__getattribute__(self,attr).value.id)
+                else:
+                    setattr(attr_obj, actual_attr, object.__getattribute__(self,attr).value)
             
         return obj
     
