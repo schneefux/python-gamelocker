@@ -751,6 +751,7 @@ class DataMessage(object): #JSON API Data Object see: http://jsonapi.org/format/
         """
         Used to get a DataMessage (an object derived from DataMessage) with values in its
         Attribute members loaded from a jsonapi request object (raw string request) according to Attribute objects mapping.
+        If the jsonapi request object is a list a list of message objects is returned.
         msg_class => the class (derived from DataMessage) which should be used as message class. (This class will be initialized and returned)
         """
         json_message = json.loads(raw_message) #parse raw_message to json
@@ -765,9 +766,18 @@ class DataMessage(object): #JSON API Data Object see: http://jsonapi.org/format/
         else:
             raise Exception("Message is missing data.")
         
-        msg = msg_class()
-        msg.map_message(data)
-        return msg
+        if isinstance(data, (list, tuple)):
+            messages = []
+            for d in data:
+                msg = msg_class()
+                msg.map_message(d)
+                messages.append(msg)
+
+            return messages
+        else:
+            msg = msg_class()
+            msg.map_message(data)
+            return msg
         
     def update_object(self,obj):
         """
