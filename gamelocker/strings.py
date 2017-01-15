@@ -27,6 +27,7 @@ class Stats(dict):
         return obj
 
     def __get(self, name):
+        # name = LazyObject(name).pretty() # TODO prettify itemUses
         if name in self:
             return self.__typeit(self[name])
         else:

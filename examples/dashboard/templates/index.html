@@ -8,7 +8,7 @@
     </head>
     <body>
         <header class="navbar-fixed">
-            <nav>
+            <nav class="blue lighten-1">
                 <div class="nav-wrapper">
                     <a href="/" class="brand-logo center">Vainglory API</a>
                 </div>
@@ -32,11 +32,33 @@
             </div> <!-- #loading -->
 
             <noscript><p class="center section">This site requires JavaScript.</p></noscript>
-            <div class="section">
-                <div id="gameType"></div>
-                <div id="players"></div>
-                <div id="durations"></div>
-                <div id="picks"></div>
+            <div class="section" id="statistics" style="display: none;">
+                <div class="section" style="font-size: 2em;">
+                    <p class="center">Best CS</p>
+                    <p id="cs-player" style="font-weight: bold;" class="center"></p>
+                    <p class="center">with <span id="cs-actor"></span> (<span id="cs-cs"></span> per minute)</p>
+                </div>
+                <div class="section" id="gameType"></div>
+                <div class="section" style="font-size: 2em;">
+                    <p style="font-weight: bold;" class="center"><span id="minions"></span> Minions</p>
+                    <p class="center">died in the last <span class="number"></span> matches</p>
+                </div>
+                <div class="section" id="players"></div>
+                <div class="section" style="font-size: 2em;">
+                    <p class="center">Average number of boots per game</p>
+                    <p id="boots" style="font-weight: bold;" class="center"></p>
+                </div>
+                <div class="section" id="durations"></div>
+                <div class="section" style="font-size: 2em;">
+                    <p class="center">Most sold</p>
+                    <p id="topsold" style="font-weight: bold;" class="center"></p>
+                </div>
+                <div class="section" id="picks"></div>
+                <div class="section" style="font-size: 2em;">
+                    <p class="center">Every</p>
+                    <p id="potions" style="font-weight: bold;" class="center"></p>
+                    <p class="center">seconds a potion is consumed</p>
+                </div>
             </div>
 
             <div id="ad" class="center">
@@ -44,7 +66,7 @@
             </div>
         </main>
 
-        <footer class="page-footer">
+        <footer class="page-footer blue lighten-1">
             <div class="container">
                 <p class="grey-text text-lighten-4">Want to donate Bitcoin? <a class="grey-text text-lighten-3" href="bitcoin:34WgXENFP6vf5zpgDpfTYCLJjWz1RCa2t2">34WgXENFP6vf5zpgDpfTYCLJjWz1RCa2t2</a></p>
                 <p class="grey-text text-lighten-4">View the <a class="grey-text text-lighten-3" href="https://git.schneefux.xyz/schneefux/python-gamelocker">source code</a></p>
@@ -62,7 +84,8 @@
         <script async type="text/javascript" src="/static/highcharts.js"></script>
         <script type="text/javascript">
             $.getScript("/stats.js", function() {
-                $("#loading").hide()
+                $("#loading").hide();
+                $("#statistics").show();
             });
         </script>
     </body>
