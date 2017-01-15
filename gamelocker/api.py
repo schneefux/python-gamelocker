@@ -8,10 +8,8 @@ requests.api
 This module implements the Gamelocker API.
 """
 
-import inspect
 import datetime
 import requests
-import requests_jwt
 import gamelocker.datatypes
 
 
