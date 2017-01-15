@@ -38,7 +38,7 @@ class Player(DataMessage):
     key_id = attr(str, "id")
 
     name = attr(str, "name")
-    stats = rel(dict, "stats")
+    stats = attr(dict, "stats")
 
 
 class Participant(DataMessage):
@@ -46,7 +46,7 @@ class Participant(DataMessage):
     key_id = attr(str, "id")
 
     actor = attr(str, "actor")
-    stats = attr(str, "stats")
+    stats = attr(dict, "stats")
 
     player = rel(Player, "player")
 
@@ -62,7 +62,7 @@ class Roster(DataMessage):
     type_name = "roster"
     key_id = attr(str, "id")
 
-    stats = attr(str, "stats")
+    stats = attr(dict, "stats")
 
     participants = rel(Participant, "participants")
     team = rel(Team, "team")
