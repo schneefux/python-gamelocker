@@ -102,7 +102,7 @@ class Gamelocker(object):
             element = gamelocker.datatypes.link_to_object(element, includes)
             return element
 
-    def vainglory(self):
+    def Vainglory(self):
         """Sets title to Vainglory.
 
         :return: :class:`Gamelocker <Gamelocker>` object

@@ -10,7 +10,7 @@ class TestGamelocker:
 
     @pytest.fixture
     def api(self):
-        return gamelocker.Gamelocker(self.apikey).vainglory()
+        return gamelocker.Gamelocker(self.apikey).Vainglory()
 
     def test_req(self, api):
         with pytest.raises(requests.exceptions.HTTPError):
