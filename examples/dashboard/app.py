@@ -33,7 +33,7 @@ def data():
 
     data = dict()
     api = gamelocker.Gamelocker("aaa.bbb.ccc").vainglory()
-    data["number"] = 50
+    data["number"] = config.batchsize
     matches = api.matches(data["number"])
 
     gameModes = dict()
