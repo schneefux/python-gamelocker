@@ -1,58 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta charset="utf-8">
         <title>Vainglory API demo</title>
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0" />
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="/static/materialize.min.css">
     </head>
     <body>
-        <div id="gameType" style="height: 100%; width: 400px;"></div>
-        <div id="players" style="height: 100%; width: 400px;"></div>
-        <div id="picks" style="height: 100%; width: 400px;"></div>
-        <script src="/static/jquery-3.1.1.min.js"></script>
-        <script src="/static/highcharts.js"></script>
-        <script>
-            $(function () {
-                Highcharts.chart("gameType", {
-                    chart: {
-                        type: "pie"
-                    },
-                    title:  {
-                        text: "Game modes over the last {{ number }} matches"
-                    },
-                    series: [{
-                        data: {{ gameModes|tojson|safe }}
-                    }]
-                });
-                Highcharts.chart("players", {
-                    chart: {
-                        type: "bar"
-                    },
-                    xAxis: {
-                        categories: ["matches"]
-                    },
-                    title:  {
-                        text: "Most active players"
-                    },
-                    series: {{ players|tojson|safe }}
-                });
-                Highcharts.chart("picks", {
-                    chart: {
-                        type: "column"
-                    },
-                    title:  {
-                        text: "Popular picks"
-                    },
-                    plotOptions: {
-                        column: {
-                            stacking: "normal"
-                        }
-                    },
-                    xAxis: {
-                        categories: {{ heroes|tojson|safe }}
-                    },
-                    series: {{ picks|tojson|safe }}
-                });
+        <header class="navbar-fixed">
+            <nav>
+                <div class="nav-wrapper">
+                    <a href="/" class="brand-logo center">Vainglory API</a>
+                </div>
+            </nav>
+        </header>
+
+        <main class="section container">
+            <div id="loading" class="center">
+                <div class="preloader-wrapper big active">
+                    <div class="spinner-layer spinner-blue-only">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div><div class="gap-patch">
+                            <div class="circle"></div>
+                        </div><div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+                </div>
+                <p class="center">Crunching data for you, stay tight…</p>
+            </div> <!-- #loading -->
+
+            <noscript><p class="center section">This site requires JavaScript.</p></noscript>
+            <div class="section">
+                <div id="gameType"></div>
+                <div id="players"></div>
+                <div id="durations"></div>
+                <div id="picks"></div>
+            </div>
+
+            <div id="ad" class="center">
+                {% if useads %}{{ ads|random|safe }}{% endif %}
+            </div>
+        </main>
+
+        <footer class="page-footer">
+            <div class="container">
+                <p class="grey-text text-lighten-4">Want to donate Bitcoin? <a class="grey-text text-lighten-3" href="bitcoin:34WgXENFP6vf5zpgDpfTYCLJjWz1RCa2t2">34WgXENFP6vf5zpgDpfTYCLJjWz1RCa2t2</a></p>
+                <p class="grey-text text-lighten-4">View the <a class="grey-text text-lighten-3" href="https://git.schneefux.xyz/schneefux/python-gamelocker">source code</a></p>
+                <p class="grey-text text-lighten-4"><a class="grey-text text-lighten-3" onclick="$.get('/ads-toggle', function(){ location.reload(); });" href="#">Turn ads {% if useads %}off{% else %}on{% endif %}</a></p>
+            </div>
+            <div class="footer-copyright">
+                <div class="container">
+                    built with &lt;3 by shutterfly
+                </div>
+            </div>
+        </footer>
+
+        <script type="text/javascript" src="/static/jquery-3.1.1.min.js"></script>
+        <script defer type="text/javascript" src="/static/materialize.min.js"></script>
+        <script async type="text/javascript" src="/static/highcharts.js"></script>
+        <script type="text/javascript">
+            $.getScript("/stats.js", function() {
+                $("#loading").hide()
             });
         </script>
     </body>
