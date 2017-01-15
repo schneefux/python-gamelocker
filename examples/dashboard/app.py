@@ -10,6 +10,7 @@ import ads
 import config
 
 app = Flask(__name__)
+app.secret_key = config.secret_key
 cache = SimpleCache()
 
 
@@ -75,5 +76,4 @@ def data():
     return render_template("stats.js", stats=data)
 
 if __name__ == "__main__":
-    app.secret_key = config.secret_key
     app.run(debug=config.debug)
