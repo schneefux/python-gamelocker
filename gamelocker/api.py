@@ -189,7 +189,7 @@ class Gamelocker(object):
         matches = []
         for batch in range(0, limit, max_limit):
             params["page[limit]"] = min(limit, max_limit)
-            params["page[offset]"] = batch*max_limit+offset
+            params["page[offset]"] = max_limit+offset
             matches += self._get("matches", params=params)
             limit -= max_limit
 
