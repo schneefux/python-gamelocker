@@ -38,14 +38,6 @@ $(function () {
         title:  {
             text: "Popular picks"
         },
-        plotOptions: {
-            column: {
-                stacking: "normal"
-            }
-        },
-        xAxis: {
-            categories: {{ stats.heroes|tojson|safe }}
-        },
         series: {{ stats.picks|tojson|safe }}
     });
     Highcharts.chart("durations", {

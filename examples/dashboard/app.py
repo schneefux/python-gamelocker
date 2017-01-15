@@ -41,7 +41,6 @@ def data():
     durations = dict()
     players = dict()
     heroes = dict()
-    picks = dict()
     sells = dict()
     minions = 0
     potions = 0
@@ -51,7 +50,6 @@ def data():
         if match.gameMode not in gameModes:
             gameModes[match.gameMode] = 0
             durations[match.gameMode] = []
-            picks[match.gameMode] = dict()
         gameModes[match.gameMode] += 1
         durations[match.gameMode] += [match.duration/60]
 
@@ -60,10 +58,6 @@ def data():
                 if participant.player.name not in players:
                     players[participant.player.name] = 0
                 players[participant.player.name] += 1
-
-                if participant.actor.pretty() not in picks[match.gameMode]:
-                    picks[match.gameMode][participant.actor.pretty()] = 0
-                picks[match.gameMode][participant.actor.pretty()] += 1
 
                 if participant.actor.pretty() not in heroes:
                     heroes[participant.actor.pretty()] = 0
@@ -104,8 +98,9 @@ def data():
     data["gameModes"] = [{"name": k, "y": v} for k, v in gameModes.items()]
     data["durations"] = [{"name": k, "data": list(zip([list(durations.keys()).index(k)]*len(v), v))} for k, v in durations.items()]
 
-    data["picks"] = [{"name": k, "data": list(v.values())} for k, v in picks.items()]
     data["heroes"] = list(heroes.keys())
+    heroes = sorted(heroes.items(), key=lambda x: x[1], reverse=True)
+    data["picks"] = [{"name": k, "data": [v]} for k, v in heroes]
 
     players = sorted(players.items(), key=lambda x: x[1], reverse=True)[:5]
     data["players"] = [{"name": k, "data": [v]} for k, v in players]
