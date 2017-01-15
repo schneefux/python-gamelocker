@@ -22,6 +22,30 @@ class TestGamelocker:
     def test_map(self):
         assert gamelocker.datatypes.modulemap()["match"] is gamelocker.datatypes.Match
 
+    def test_strings(self, api):
+        stats = gamelocker.strings.Stats({"foo": 1, "bar": 2, "baz": {"deep": True}})
+        assert stats.foo == 1
+        assert stats.baz.deep == True
+
+        taka = gamelocker.strings.Hero("*Sayoc*")
+        assert taka == "*Sayoc*"
+        assert taka.pretty() == "Taka"
+        assert gamelocker.strings.Hero("notexisting") == "notexisting"
+
+        assert gamelocker.strings.Item("Boots2").pretty() == "Travel Boots"
+        assert gamelocker.strings.Item("*1032_Item_TravelBoots*").pretty() == "Travel Boots"
+        assert gamelocker.strings.Item("unknowntestitem").pretty() == "unknowntestitem"
+
+        assert gamelocker.strings.LazyObject("Boots2").pretty() == "Travel Boots"
+        assert gamelocker.strings.LazyObject("*Sayoc*").pretty() == "Taka"
+
+        match = api.match("91cf2ee4-d7d0-11e6-ad79-062445d3d668")
+        assert isinstance(match.rosters[0].participants[0].actor, gamelocker.strings.Hero)
+
+        assert isinstance(match.rosters[0].stats.acesEarned, int)
+        assert isinstance(match.rosters[0].participants[0].stats.items[0], gamelocker.strings.LazyObject)
+        assert isinstance(match.rosters[0].participants[0].stats.items[0].pretty(), str)
+
     def test_match(self, api):
         match = api.match("91cf2ee4-d7d0-11e6-ad79-062445d3d668")
         assert match.gameMode == "casual"
@@ -37,7 +61,18 @@ class TestGamelocker:
         assert matches[0].duration > 0
 
     def test_matchesfilters(self, api):
-        assert len(api.matches(limit=5)) == 5
+        matches1 = api.matches(limit=3)
+        assert len(matches1) == 3
+        matches2 = api.matches(limit=3, offset=1)
+
+        commons = 0  # 3 matches each, offset 1 -> 2 overlap
+        for match1 in matches1:
+            for match2 in matches2:
+                if match1.id == match2.id:
+                    commons += 1
+        assert commons == 2
+
+        assert len(api.matches(limit=52)) == 52
 
         # TODO uncomment as soon as the API is up
 #        matches = api.matches(limit=10, sort="duration")

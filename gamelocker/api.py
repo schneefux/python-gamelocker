@@ -3,7 +3,7 @@
 # TODO: generate documentation
 
 """
-requests.api
+gamelocker.api
 
 This module implements the Gamelocker API.
 """
@@ -11,6 +11,7 @@ This module implements the Gamelocker API.
 import datetime
 import requests
 import gamelocker.datatypes
+import gamelocker.strings
 
 
 class Gamelocker(object):
@@ -157,12 +158,18 @@ class Gamelocker(object):
         :return: List of matches.
         :rtype: list of dict
         """
+        max_limit = 50  # as set by the API
+
         params = dict()
         # TODO: deprecate by ?limit=x&offset=y soon
         if limit:
             params["page[limit]"] = limit
+        else:
+            limit = max_limit
         if offset:
             params["page[offset]"] = offset
+        else:
+            offset = 0
         if sort:  # TODO make this nice and usable
             params["sort"] = sort
         if player:
@@ -178,4 +185,12 @@ class Gamelocker(object):
                 createdAtEnd = createdAtEnd.isoformat()
             params["filter[createdAt-end]"] = createdAtEnd
 
-        return self._get("matches", params=params)
+        # split request to batches of 50
+        matches = []
+        for batch in range(0, limit, max_limit):
+            params["page[limit]"] = min(limit, max_limit)
+            params["page[offset]"] = batch*max_limit+offset
+            matches += self._get("matches", params=params)
+            limit -= max_limit
+
+        return matches

@@ -267,7 +267,7 @@ class Attribute(object): #Attribute Class to map Data from input Object to Messa
     transformation to json.
     """
 
-    __primitive_types = (str,str,int,int,float,bool) #all allowed types for attribute values. (lists and dicts are also allowed, but treated differently)
+    __primitive_types = (str,int,float,bool) #all allowed types for attribute values. (lists and dicts are also allowed, but treated differently)
 
     value = None #holds the actual value of this attribute once it is set.
     
@@ -289,7 +289,7 @@ class Attribute(object): #Attribute Class to map Data from input Object to Messa
         sets all needed configurations and checks if value is a primitive type or list or dict.
         """
 
-        if value_type in self.__primitive_types or value_type == list or value_type == dict or issubclass(value_type,DataMessage):
+        if issubclass(value_type, self.__primitive_types + (list, dict)) or issubclass(value_type,DataMessage):
             self.value_type = value_type
             self.name = name
             self.required = required
