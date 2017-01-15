@@ -17,7 +17,7 @@ cache = SimpleCache()
 @app.route("/")
 def index():
     if "ads" not in session:
-        session["ads"] = True
+        session["ads"] = False
     return render_template("index.html", ads=ads.ads, useads=session["ads"])
 
 @app.route("/ads-toggle")
@@ -55,12 +55,13 @@ def data():
                     players[participant.player.name] = 0
                 players[participant.player.name] += 1
 
-                if participant.actor not in picks[match.gameMode]:
-                    picks[match.gameMode][participant.actor] = 0
-                picks[match.gameMode][participant.actor] += 1
+                if participant.actor.pretty() not in picks[match.gameMode]:
+                    picks[match.gameMode][participant.actor.pretty()] = 0
+                picks[match.gameMode][participant.actor.pretty()] += 1
 
-                if participant.actor not in heroes:
-                    heroes[participant.actor] = 0
+                if participant.actor.pretty() not in heroes:
+                    heroes[participant.actor.pretty()] = 0
+                heroes[participant.actor.pretty()] += 1
 
     data["gameModes"] = [{"name": k, "y": v} for k, v in gameModes.items()]
     data["durations"] = [{"name": k, "data": list(zip([list(durations.keys()).index(k)]*len(v), v))} for k, v in durations.items()]
