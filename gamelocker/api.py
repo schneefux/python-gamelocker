@@ -1,7 +1,5 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# TODO: generate documentation
-
 """
 gamelocker.api
 
