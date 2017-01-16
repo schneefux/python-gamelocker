@@ -81,8 +81,8 @@ class TestGamelocker:
         def fromiso(s):
             return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ")
 
-        start = "2017-01-11T02:25:00Z"
-        end = "2017-01-11T02:30:00Z"
+        start = "2017-01-10T02:25:00Z"
+        end = "2017-01-12T02:30:00Z"
         matches = api.matches(createdAtStart=start, createdAtEnd=end)
         for match in matches:
             assert fromiso(end) >= fromiso(match.createdAt) >= fromiso(start)
