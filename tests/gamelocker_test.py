@@ -17,7 +17,7 @@ class TestGamelocker:
             assert api._req("foobar")
         assert type(api._req("status")) is dict
 
-        assert "status" in api.status()
+        assert api.status()["data"]["attributes"]["version"]
 
     def test_map(self):
         assert gamelocker.datatypes.modulemap()["match"] is gamelocker.datatypes.Match
