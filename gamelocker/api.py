@@ -41,6 +41,7 @@ class Gamelocker(object):
         self.apikey = apikey
         self._apiurl = "https://api." + datacenter + ".gamelockerapp.com/"
         self.title = ""
+        self.region = ""
 
     def _req(self, method, params=None):
         """Sends a GET request to the API endpoint.
@@ -75,7 +76,8 @@ class Gamelocker(object):
         :return: Data object.
         :rtype: :class:`janus.DataMessage`
         """
-        data = self._req(endpoint + "/" + elid, params=params)
+        data = self._req("shards/" + self.region + "/" +
+                         endpoint + "/" + elid, params=params)
 
         # collect related data
         includes = []
@@ -100,13 +102,16 @@ class Gamelocker(object):
             element = gamelocker.datatypes.link_to_object(element, includes)
             return element
 
-    def Vainglory(self):
-        """Sets title to Vainglory.
+    def Vainglory(self, region="na"):
+        """Sets title to Vainglory and data region.
 
+        :param region: (optional) Data region (shard) to use. Defaults to NA.
+        :type region: str
         :return: :class:`Gamelocker <Gamelocker>` object
         :rtype: gamelocker.Gamelocker
         """
         self.title = "semc-vainglory"
+        self.region = region
         return self
 
     def status(self):
