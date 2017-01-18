@@ -87,27 +87,27 @@ class TestGamelocker:
         for match in matches:
             assert fromiso(end) >= fromiso(match.createdAt) >= fromiso(start)
 
-#        nick = "MMotooks123"
-#        matches = api.matches(limit=5, player=nick)
-#        for match in matches:
-#            success = False
-#            for roster in match.rosters:
-#                for participant in roster.participants:
-#                    if participant.player.name == nick:
-#                        success = True
-#                        break
-#            assert success
-#
-#        team = "HALO"
-#        matches = api.matches(limit=5, team=team)
-#        for match in matches:
-#            success = False
-#            for roster in match.rosters:
-#                if roster.team:
-#                    if roster.team.name == team:
-#                        success = True
-#                        break
-#            assert success
+        nick = "MMotooks123"
+        matches = api.matches(limit=5, player=nick)
+        for match in matches:
+            success = False
+            for roster in match.rosters:
+                for participant in roster.participants:
+                    if participant.player.name == nick:
+                        success = True
+                        break
+            assert success
+
+        team = "HALO"
+        matches = api.matches(limit=5, team=team)
+        for match in matches:
+            success = False
+            for roster in match.rosters:
+                if roster.team:
+                    if roster.team.name == team:
+                        success = True
+                        break
+            assert success
 
     def test_player(self, api):
         assert api.player("6abb30de-7cb8-11e4-8bd3-06eb725f8a76").name == "boombastic04"

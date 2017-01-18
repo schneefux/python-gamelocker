@@ -176,9 +176,9 @@ class Gamelocker(object):
         if sort:  # TODO make this nice and usable
             params["sort"] = sort
         if player:
-            params["filter[playerName]"] = player
+            params["filter[playerNames]"] = player
         if team:
-            params["filter[teamName]"] = team
+            params["filter[teamNames]"] = team
         if createdAtStart:
             if isinstance(createdAtStart, datetime.datetime):
                 createdAtStart = createdAtStart.isoformat()
@@ -192,7 +192,7 @@ class Gamelocker(object):
         matches = []
         for batch in range(0, limit, max_limit):
             params["page[limit]"] = min(limit, max_limit)
-            params["page[offset]"] = max_limit+offset
+            params["page[offset]"] = batch+offset
             matches += self._get("matches", params=params)
             limit -= max_limit
 
