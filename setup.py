@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name="python-gamelocker",
-    version="0.1.1",
+    version="0.2.0",
     description="Python Gamelocker API Wrapper",
     author="schneefux",
     author_email="schneefux+pypi_schneefux@schneefux.xyz",
