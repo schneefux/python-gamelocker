@@ -9,7 +9,6 @@ Classes and utility functions to map API responses to objects.
 
 import inspect
 import sys
-import gamelocker.strings
 from gamelocker.janus import DataMessage, Attribute
 
 
@@ -44,15 +43,15 @@ class Player(DataMessage):
     key_id = attr(str, "id")
 
     name = attr(str, "name")
-    stats = attr(gamelocker.strings.Stats, "stats")
+    stats = attr(dict, "stats")
 
 
 class Participant(DataMessage):
     type_name = "participant"
     key_id = attr(str, "id")
 
-    actor = attr(gamelocker.strings.Hero, "actor")
-    stats = attr(gamelocker.strings.Stats, "stats")
+    actor = attr(str, "actor")
+    stats = attr(dict, "stats")
 
     player = rel(Player, "player")
 
@@ -68,7 +67,7 @@ class Roster(DataMessage):
     type_name = "roster"
     key_id = attr(str, "id")
 
-    stats = attr(gamelocker.strings.Stats, "stats")
+    stats = attr(dict, "stats")
 
     participants = rel(Participant, "participants")
     team = rel(Team, "team")
@@ -83,7 +82,7 @@ class Match(DataMessage):
     gameMode = attr(str, "gameMode")
     patchVersion = attr(str, "patchVersion")
     region = attr(str, "region")
-    stats = attr(gamelocker.strings.Stats, "stats")
+    stats = attr(dict, "stats")
 
     rosters = rel(Roster, "rosters")
 

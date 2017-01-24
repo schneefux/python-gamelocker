@@ -17,8 +17,8 @@ Example usage:
 [<gamelocker.datatypes.Match object at 0x7f2682314ac8>, <gamelocker.datatypes.Match object at 0x7f26823d3c50>]
 >>> m.rosters[0].participants[0].player.name
 "iiDruid"
->>> m.rosters[0].participants[0].stats.kills
+>>> m.rosters[0].participants[0].stats["kills"]
 10
->>> m.rosters[0].stats.acesEarned
+>>> m.rosters[0].stats["acesEarned"]
 2
 ```

@@ -197,3 +197,6 @@ class Gamelocker(object):
             limit -= max_limit
 
         return matches
+
+
+pretty = gamelocker.strings.pretty

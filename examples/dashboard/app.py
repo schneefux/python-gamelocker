@@ -59,28 +59,28 @@ def data():
                     players[participant.player.name] = 0
                 players[participant.player.name] += 1
 
-                if participant.actor.pretty() not in heroes:
-                    heroes[participant.actor.pretty()] = 0
-                heroes[participant.actor.pretty()] += 1
+                if gamelocker.pretty(participant.actor) not in heroes:
+                    heroes[gamelocker.pretty(participant.actor)] = 0
+                heroes[gamelocker.pretty(participant.actor)] += 1
 
                 # TODO use id instead of name?
-                playersactors[participant.player.name] = participant.actor.pretty()
-                cs[participant.player.name] = participant.stats.minionKills / match.duration * 60
-                minions += participant.stats.minionKills
+                playersactors[participant.player.name] = gamelocker.pretty(participant.actor)
+                cs[participant.player.name] = participant.stats["minionKills"] / match.duration * 60
+                minions += participant.stats["minionKills"]
 
-                for item in participant.stats.items:
-                    if item.pretty() in ["Sprint Boots", "Travel Boots", "Journey Boots", "War Treads", "Halcyon Chargers"]:
+                for item in participant.stats["items"]:
+                    if gamelocker.pretty(item) in ["Sprint Boots", "Travel Boots", "Journey Boots", "War Treads", "Halcyon Chargers"]:
                         boots += 1
 
-                for item in participant.stats.itemUses:
-                    if gamelocker.strings.LazyObject(item).pretty() == "Halcyon Potion":
-                        potions += participant.stats.itemUses[item]
+                for item in participant.stats["itemUses"]:
+                    if gamelocker.pretty(item) == "Halcyon Potion":
+                        potions += participant.stats["itemUses"][item]
                 
-                for sold in participant.stats.itemSells:
-                    item = gamelocker.strings.LazyObject(sold).pretty()
+                for sold in participant.stats["itemSells"]:
+                    item = gamelocker.pretty(sold)
                     if not item in sells:
                         sells[item] = 0
-                    sells[item] += participant.stats.itemSells[sold]
+                    sells[item] += participant.stats["itemSells"][sold]
 
     sells = sorted(sells.items(), key=lambda x: x[1], reverse=True)
     data["topsold"] = ", ".join([s[0] for s in sells[0:3]])

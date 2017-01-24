@@ -10,56 +10,7 @@ Currently Vainglory-specific only.
 """
 
 
-# this is quite of a hack.
-class Stats(dict):
-    """A hybrid between `dict` and `object`
-       that types :class:`LazyObject`'s to strings."""
-    def __typeit(self, obj):
-        if isinstance(obj, (tuple, list)):
-            l = []
-            for o in obj:
-                l.append(self.__typeit(o))
-            return l
-        if isinstance(obj, dict):
-            return Stats(obj)
-        if isinstance(obj, str):
-            return LazyObject(obj)
-        return obj
-
-    def __get(self, name):
-        # name = LazyObject(name).pretty() # TODO prettify itemUses
-        if name in self:
-            return self.__typeit(self[name])
-        else:
-            raise AttributeError("No such attribute: " + name)
-
-    def __getattr__(self, name):
-        return self.__get(name)
-
-    def __setattr__(self, name, value):
-        self[name] = value
-
-    def __delattr__(self, name):
-        if name in self:
-            del self[name]
-        else:
-            raise AttributeError("No such attribute: " + name)
-
-    @property
-    def items(self):
-        return self.__get("items")
-
-class LazyObject(str):
-    """Can be both :class:`Hero` or :class:`Item`."""
-    def pretty(self):
-        for cls in (Hero, Item):
-            prettystr = cls(self).pretty()
-            if prettystr != self:
-                return prettystr
-        return self
-
-
-class Hero(str):
+class VaingloryStrings(object):
     heroes = {
         "*Adagio*": "Adagio",
         "*Alpha*": "Alpha",
@@ -93,13 +44,6 @@ class Hero(str):
         "*Vox*": "Vox"
     }
 
-    def pretty(self):
-        if self in self.heroes:
-            return self.heroes[self]
-        return self
-
-
-class Item(str):
     items = {
         "Aftershock": "Aftershock",
         "Armor2": "Coat of Plates",
@@ -236,9 +180,13 @@ class Item(str):
         "*1105_Item_SlumberingHusk*": "Slumbering Husk"
     }
 
-    def pretty(self):
-        if self in self.items:
-            return self.items[self]
-        if self in self.item_ids:
-            return self.item_ids[self]
-        return self
+
+def pretty(string):
+    """Returns prettified hero or item or original string."""
+    if string in VaingloryStrings.heroes:
+        return VaingloryStrings.heroes[string]
+    if string in VaingloryStrings.items:
+        return VaingloryStrings.items[string]
+    if string in VaingloryStrings.item_ids:
+        return VaingloryStrings.item_ids[string]
+    return string

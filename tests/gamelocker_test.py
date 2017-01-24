@@ -23,28 +23,16 @@ class TestGamelocker:
         assert gamelocker.datatypes.modulemap()["match"] is gamelocker.datatypes.Match
 
     def test_strings(self, api):
-        stats = gamelocker.strings.Stats({"foo": 1, "bar": 2, "baz": {"deep": True}})
-        assert stats.foo == 1
-        assert stats.baz.deep == True
-
-        taka = gamelocker.strings.Hero("*Sayoc*")
-        assert taka == "*Sayoc*"
-        assert taka.pretty() == "Taka"
-        assert gamelocker.strings.Hero("notexisting") == "notexisting"
-
-        assert gamelocker.strings.Item("Boots2").pretty() == "Travel Boots"
-        assert gamelocker.strings.Item("*1032_Item_TravelBoots*").pretty() == "Travel Boots"
-        assert gamelocker.strings.Item("unknowntestitem").pretty() == "unknowntestitem"
-
-        assert gamelocker.strings.LazyObject("Boots2").pretty() == "Travel Boots"
-        assert gamelocker.strings.LazyObject("*Sayoc*").pretty() == "Taka"
+        assert gamelocker.strings.pretty("notexisting") == "notexisting"
+        assert gamelocker.strings.pretty("Boots2") == "Travel Boots"
+        assert gamelocker.strings.pretty("*1032_Item_TravelBoots*") == "Travel Boots"
+        assert gamelocker.strings.pretty("unknowntestitem") == "unknowntestitem"
 
         match = api.match("91cf2ee4-d7d0-11e6-ad79-062445d3d668")
-        assert isinstance(match.rosters[0].participants[0].actor, gamelocker.strings.Hero)
+        assert isinstance(match.rosters[0].participants[0].actor, str)
 
-        assert isinstance(match.rosters[0].stats.acesEarned, int)
-        assert isinstance(match.rosters[0].participants[0].stats.items[0], gamelocker.strings.LazyObject)
-        assert isinstance(match.rosters[0].participants[0].stats.items[0].pretty(), str)
+        assert isinstance(match.rosters[0].stats["acesEarned"], int)
+        assert isinstance(match.rosters[0].participants[0].stats["items"][0], str)
 
     def test_match(self, api):
         match = api.match("91cf2ee4-d7d0-11e6-ad79-062445d3d668")
@@ -72,7 +60,7 @@ class TestGamelocker:
                     commons += 1
         assert commons == 2
 
-        assert len(api.matches(limit=52)) == 52
+        assert len(api.matches(limit=42)) == 42
 
         # TODO uncomment as soon as the API is up
 #        matches = api.matches(limit=10, sort="duration")
