@@ -142,61 +142,15 @@ class Gamelocker(object):
         """
         return self._get("players", elid)
 
-    def matches(self,
-                limit=None, offset=None, sort=None,
-                player=None, team=None,
-                createdAtStart=None, createdAtEnd=None):
+    def matches(self, params=None):
         """Returns a list of recent matches.
 
-        :param limit: Maximum number of matches to return.
-        :type limit: int
-        :param offset: Offset parameter for pagination.
-        :type limit: int
-        :param sort: Sort query to use.
-        :type sort: str
-        :param createdAtStart: Earliest createdAt time.
-        :type createdAtStart: `datetime.datetime` or str
-        :param createdAtEnd: Latest createdAt time.
-        :type createdAtEnd: `datetime.datetime` or str
+        :param params: (optional) Query parameters.
+        :type params: dict
         :return: List of matches.
         :rtype: list of dict
         """
-        max_limit = 50  # as set by the API
-
-        params = dict()
-        # TODO: deprecate by ?limit=x&offset=y soon
-        if limit:
-            params["page[limit]"] = limit
-        else:
-            limit = max_limit
-        if offset:
-            params["page[offset]"] = offset
-        else:
-            offset = 0
-        if sort:  # TODO make this nice and usable
-            params["sort"] = sort
-        if player:
-            params["filter[playerNames]"] = player
-        if team:
-            params["filter[teamNames]"] = team
-        if createdAtStart:
-            if isinstance(createdAtStart, datetime.datetime):
-                createdAtStart = createdAtStart.isoformat()
-            params["filter[createdAt-start]"] = createdAtStart
-        if createdAtEnd:
-            if isinstance(createdAtEnd, datetime.datetime):
-                createdAtEnd = createdAtEnd.isoformat()
-            params["filter[createdAt-end]"] = createdAtEnd
-
-        # split request to batches of 50
-        matches = []
-        for batch in range(0, limit, max_limit):
-            params["page[limit]"] = min(limit, max_limit)
-            params["page[offset]"] = batch+offset
-            matches += self._get("matches", params=params)
-            limit -= max_limit
-
-        return matches
+        return self._get("matches", params=params)
 
 
 pretty = gamelocker.strings.pretty

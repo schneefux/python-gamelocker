@@ -49,9 +49,9 @@ class TestGamelocker:
         assert matches[0].duration > 0
 
     def test_matchesfilters(self, api):
-        matches1 = api.matches(limit=3)
+        matches1 = api.matches({"page[limit]": 3})
         assert len(matches1) == 3
-        matches2 = api.matches(limit=3, offset=1)
+        matches2 = api.matches({"page[limit]": 3, "page[offset]": 1})
 
         commons = 0  # 3 matches each, offset 1 -> 2 overlap
         for match1 in matches1:
@@ -60,10 +60,10 @@ class TestGamelocker:
                     commons += 1
         assert commons == 2
 
-        assert len(api.matches(limit=42)) == 42
+        assert len(api.matches({"page[limit]": 42})) == 42
 
         # TODO uncomment as soon as the API is up
-#        matches = api.matches(limit=10, sort="duration")
+#        matches = api.matches({"page[limit]": 10, "sort": "duration"})
 #        assert matches[0].duration < matches[9].duration
 
         def fromiso(s):
@@ -71,12 +71,12 @@ class TestGamelocker:
 
         start = "2017-01-10T02:25:00Z"
         end = "2017-01-12T02:30:00Z"
-        matches = api.matches(createdAtStart=start, createdAtEnd=end)
+        matches = api.matches({"filter[createdAt-start]": start, "filter[createdAt-end]": end})
         for match in matches:
             assert fromiso(end) >= fromiso(match.createdAt) >= fromiso(start)
 
         nick = "MMotooks123"
-        matches = api.matches(limit=5, player=nick)
+        matches = api.matches({"page[limit]": 5, "filter[playerNames]": nick})
         for match in matches:
             success = False
             for roster in match.rosters:
@@ -87,7 +87,7 @@ class TestGamelocker:
             assert success
 
         team = "HALO"
-        matches = api.matches(limit=5, team=team)
+        matches = api.matches({"page[limit]": 5, "filter[teamNames]": team})
         for match in matches:
             success = False
             for roster in match.rosters:

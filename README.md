@@ -12,7 +12,7 @@ Example usage:
 >>> import gamelocker
 >>> APIKEY = "aaa.bbb.ccc"
 >>> api = gamelocker.Gamelocker(APIKEY).Vainglory()
->>> m = api.matches(limit=2, player="TheLegend27")
+>>> m = api.matches({"page[limit]": 2, "filter[playerNames]": "TheLegend27"})
 >>> m
 [<gamelocker.datatypes.Match object at 0x7f2682314ac8>, <gamelocker.datatypes.Match object at 0x7f26823d3c50>]
 >>> m.rosters[0].participants[0].player.name

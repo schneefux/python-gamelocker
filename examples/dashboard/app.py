@@ -34,7 +34,7 @@ def data():
     data = dict()
     api = gamelocker.Gamelocker("aaa.bbb.ccc").Vainglory()
     data["number"] = config.batchsize
-    matches = api.matches(data["number"])
+    matches = api.matches({"page[limit]": data["number"]})
 
     playersactors = dict()
     gameModes = dict()
