@@ -5,7 +5,7 @@ python-gamelocker
 
 Python 3 wrapper for the Gamelocker API. Currently supports [Vainglory](https://developers.vainglorygame.com). Install with PyPi: `pip install python-gamelocker`.
 
-[Private docs mirror](https://docs.schneefux.xyz/python-gamelocker)
+[Private docs mirror](https://docs.schneefux.xyz/python-gamelocker/gamelocker.html#module-gamelocker.api)
 
 Example usage:
 ```python
