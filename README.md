@@ -22,3 +22,5 @@ Example usage:
 >>> m.rosters[0].stats["acesEarned"]
 2
 ```
+
+[More examples](/examples)
