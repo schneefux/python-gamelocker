@@ -6,20 +6,13 @@ gamelocker.api
 This module implements the Gamelocker API.
 """
 
-import datetime
 import requests
 import gamelocker.datatypes
 import gamelocker.strings
 
 
 class Gamelocker(object):
-    """Implementation of the Gamelocker API.
-
-    :param apikey: API key used.
-    :type apikey: str
-    :param title: Title data is fetched for.
-    :type title: str
-    """
+    """Implementation of the Gamelocker API."""
 
     def __init__(self, apikey, datacenter="dc01"):
         """Constructs a :class:`Gamelocker <Gamelocker>`.
@@ -30,12 +23,6 @@ class Gamelocker(object):
         :type datacenter: str
         :return: :class:`Gamelocker <Gamelocker>` object
         :rtype: gamelocker.Gamelocker
-
-        Usage::
-
-            >>> import gamelocker
-            >>> gamelocker.Gamelocker("getoffmylawn").status()
-            "v1.0.5"
         """
 
         self.apikey = apikey
@@ -105,7 +92,7 @@ class Gamelocker(object):
     def Vainglory(self, region="na"):
         """Sets title to Vainglory and data region.
 
-        :param region: (optional) Data region (shard) to use. Defaults to NA.
+        :param region: (optional) Data region (shard) to use. Defaults to "na".
         :type region: str
         :return: :class:`Gamelocker <Gamelocker>` object
         :rtype: gamelocker.Gamelocker
@@ -144,6 +131,8 @@ class Gamelocker(object):
 
     def matches(self, params=None):
         """Returns a list of recent matches.
+           See http://developer.vainglorygame.com/docs/#get-a-collection-of-matches
+           for parameters.
 
         :param params: (optional) Query parameters.
         :type params: dict
