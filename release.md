@@ -1,0 +1,10 @@
+  - build documentation:
+    - `sphinx-apidoc -F -o docs gamelocker/`
+    - `cd docs`
+    - `PYTHONPATH=.. make html`
+    - push to server, `git pull`
+  - update version in setup.py
+  - `git tag` and push
+  - `python setup.py bdist_wheel`
+  - `python setup.py sdist`
+  - `twine upload dist/python-gamelocker-*`
