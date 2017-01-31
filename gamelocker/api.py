@@ -12,17 +12,18 @@ import gamelocker.strings
 
 
 class Gamelocker(object):
-    """Implementation of the Gamelocker API."""
+    """Implementation of the Gamelocker API.
+
+      :param apikey: API key to authenticate with.
+      :type apikey: str
+      :param datacenter: (optional) API endpoint datacenter to use.
+      :type datacenter: str
+      :return: :class:`Gamelocker <Gamelocker>` object
+      :rtype: gamelocker.Gamelocker
+    """
 
     def __init__(self, apikey, datacenter="dc01"):
         """Constructs a :class:`Gamelocker <Gamelocker>`.
-
-        :param apikey: API key to authenticate with.
-        :type apikey: str
-        :param datacenter: (optional) API endpoint datacenter to use.
-        :type datacenter: str
-        :return: :class:`Gamelocker <Gamelocker>` object
-        :rtype: gamelocker.Gamelocker
         """
 
         self.apikey = apikey
