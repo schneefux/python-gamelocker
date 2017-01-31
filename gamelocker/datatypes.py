@@ -4,7 +4,7 @@
 """
 gamelocker.datatypes
 
-Classes and utility functions to map API responses to objects.
+(internal) Classes and utility functions to map API responses to objects.
 """
 
 import inspect

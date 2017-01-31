@@ -4,7 +4,7 @@
 """
 gamelocker.strings
 
-A collection of mappings between strings returned by the API
+(internal) A collection of mappings between strings returned by the API
 and their common names.
 Currently Vainglory-specific only.
 """
