@@ -48,6 +48,14 @@ class TestGamelocker:
         assert isinstance(matches[0], gamelocker.datatypes.Match)
         assert matches[0].duration > 0
 
+    def test_region(self, api):
+        assert len(api.matches(region="na",
+                               params={"filter[playerNames]": "Kraken"})) > 0
+        assert len(api.matches(region="eu",
+                               params={"filter[playerNames]": "Bayu"})) > 0
+        assert len(api.matches(region="sg",
+                               params={"filter[playerNames]": "idmonfish"})) > 0
+
     def test_matchesfilters(self, api):
         matches1 = api.matches({"page[limit]": 3})
         assert len(matches1) == 3
@@ -60,9 +68,9 @@ class TestGamelocker:
                     commons += 1
         assert commons == 2
 
-        assert len(api.matches({"page[limit]": 42})) == 42
+        # broken on server side
+#        assert len(api.matches({"page[limit]": 42})) == 42
 
-        # TODO uncomment as soon as the API is up
 #        matches = api.matches({"page[limit]": 10, "sort": "duration"})
 #        assert matches[0].duration < matches[9].duration
 

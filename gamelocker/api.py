@@ -29,7 +29,6 @@ class Gamelocker(object):
         self.apikey = apikey
         self._apiurl = "https://api." + datacenter + ".gamelockerapp.com/"
         self.title = ""
-        self.region = ""
 
     def _req(self, method, params=None):
         """Sends a GET request to the API endpoint.
@@ -52,19 +51,21 @@ class Gamelocker(object):
         http.raise_for_status()
         return http.json()
 
-    def _get(self, endpoint, elid="", params=None):
+    def _get(self, endpoint, elid="", region="na", params=None):
         """Returns an object or a list of objects from the API.
 
         :param endpoint: API slug to use.
         :type endpoint: str
         :param elid: (optional) ID of the object to query for.
         :type elid: str
+        :param region: (optional) Shard to query. Defaults to "na".
+        :type region: str
         :param params: (optional) Parameters to pass with the http request.
         :type params: dict
         :return: Data object.
         :rtype: :class:`janus.DataMessage`
         """
-        data = self._req("shards/" + self.region + "/" +
+        data = self._req("shards/" + region + "/" +
                          endpoint + "/" + elid, params=params)
 
         # collect related data
@@ -90,16 +91,13 @@ class Gamelocker(object):
             element = gamelocker.datatypes.link_to_object(element, includes)
             return element
 
-    def Vainglory(self, region="na"):
-        """Sets title to Vainglory and data region.
+    def Vainglory(self):
+        """Sets title to Vainglory.
 
-        :param region: (optional) Data region (shard) to use. Defaults to "na".
-        :type region: str
         :return: :class:`Gamelocker <Gamelocker>` object
         :rtype: gamelocker.Gamelocker
         """
         self.title = "semc-vainglory"
-        self.region = region
         return self
 
     def status(self):
@@ -110,37 +108,43 @@ class Gamelocker(object):
         """
         return self._req("status")
 
-    def match(self, elid):
+    def match(self, elid, region="na"):
         """Returns a match.
 
         :param elid: ID of the match.
         :type elid: str
+        :param region: (optional) Shard to query. Defaults to "na".
+        :type region: str
         :return: A match with the given ID.
         :rtype: :class:`Match`
         """
-        return self._get("matches", elid)
+        return self._get("matches", elid, region)
 
-    def player(self, elid):
+    def player(self, elid, region="na"):
         """Returns a player.
 
         :param elid: ID of the player.
         :type elid: str
+        :param region: (optional) Shard to query. Defaults to "na".
+        :type region: str
         :return: A player with the given ID.
         :rtype: :class:`Player`
         """
-        return self._get("players", elid)
+        return self._get("players", elid, region)
 
-    def matches(self, params=None):
+    def matches(self, params=None, region="na"):
         """Returns a list of recent matches.
            See http://developer.vainglorygame.com/docs/#get-a-collection-of-matches
            for parameters.
 
         :param params: (optional) Query parameters.
         :type params: dict
+        :param region: (optional) Shard to query. Defaults to "na".
+        :type region: str
         :return: List of matches.
         :rtype: list of dict
         """
-        return self._get("matches", params=params)
+        return self._get("matches", params=params, region=region)
 
 
 pretty = gamelocker.strings.pretty
