@@ -10,6 +10,7 @@ Currently Vainglory-specific only.
 """
 
 
+# TODO
 class VaingloryStrings(object):
     heroes = {
         "*Adagio*": "Adagio",
@@ -67,7 +68,7 @@ class VaingloryStrings(object):
         "Crystal1": "Crystal Bit",
         "Crystal2": "Eclipse Prism",
         "Crystal3": "Shatterglass",
-        "Crystal Matrix": "Alternating Current",
+        "Crystal Matrix": "Aegis",
         "Echo": "Echo",
         "EveOfHarvest": "Eve of Harvest",
         "Flare": "Flare",
