@@ -6,9 +6,9 @@ gamelocker.api
 This module implements the Gamelocker API.
 """
 
+import logging
 import requests
 import gamelocker.datatypes
-import gamelocker.strings
 
 
 class Gamelocker(object):
@@ -41,13 +41,19 @@ class Gamelocker(object):
         :rtype: dict
         """
         headers = {
-            "Authorization": "Bearer " + self.apikey,
+            "Authorization": self.apikey,
             "X-TITLE-ID": self.title,
             "Accept": "application/vnd.api+json"
         }
-        http = requests.get(self._apiurl + method,
-                            headers=headers,
-                            params=params)
+        while True:
+            http = requests.get(self._apiurl + method,
+                                headers=headers,
+                                params=params)
+            if http.status_code != 429:
+                # 429 -> rate limit, retry
+                break
+            logging.info("You are being rate limited by the API")
+
         http.raise_for_status()
         return http.json()
 
@@ -137,7 +143,7 @@ class Gamelocker(object):
            See http://developer.vainglorygame.com/docs/#get-a-collection-of-matches
            for parameters.
 
-        :param params: (optional) Query parameters.
+        :param params: Query parameters.
         :type params: dict
         :param region: (optional) Shard to query. Defaults to "na".
         :type region: str
@@ -145,6 +151,3 @@ class Gamelocker(object):
         :rtype: list of dict
         """
         return self._get("matches", params=params, region=region)
-
-
-pretty = gamelocker.strings.pretty

@@ -1,16 +1,15 @@
 #!/usr/bin/python
 
+import os
 import pytest
 import requests
 import gamelocker
 import datetime
 
 class TestGamelocker:
-    apikey = "aaa.bbb.ccc"
-
     @pytest.fixture
     def api(self):
-        return gamelocker.Gamelocker(self.apikey).Vainglory()
+        return gamelocker.Gamelocker(os.environ["GAMELOCKER_APIKEY"]).Vainglory()
 
     def test_req(self, api):
         with pytest.raises(requests.exceptions.HTTPError):
@@ -22,44 +21,56 @@ class TestGamelocker:
     def test_map(self):
         assert gamelocker.datatypes.modulemap()["match"] is gamelocker.datatypes.Match
 
-    def test_strings(self, api):
-        assert gamelocker.strings.pretty("notexisting") == "notexisting"
-        assert gamelocker.strings.pretty("Boots2") == "Travel Boots"
-        assert gamelocker.strings.pretty("*1032_Item_TravelBoots*") == "Travel Boots"
-        assert gamelocker.strings.pretty("unknowntestitem") == "unknowntestitem"
-
-        match = api.match("91cf2ee4-d7d0-11e6-ad79-062445d3d668")
-        assert isinstance(match.rosters[0].participants[0].actor, str)
-
-        assert isinstance(match.rosters[0].stats["acesEarned"], int)
-        assert isinstance(match.rosters[0].participants[0].stats["items"][0], str)
-
     def test_match(self, api):
-        match = api.match("91cf2ee4-d7d0-11e6-ad79-062445d3d668")
-        assert match.gameMode == "casual"
+        match = api.match("0955b904-fb19-11e6-802d-0667892d829e")
+        assert isinstance(match.gameMode, str)
         assert isinstance(match.rosters[0], gamelocker.datatypes.Roster)
         assert isinstance(match.rosters[0].participants[0], gamelocker.datatypes.Participant)
         assert isinstance(match.rosters[0].participants[0].player, gamelocker.datatypes.Player)
         assert isinstance(match.rosters[0].participants[0].player.name, str)
+        assert isinstance(match.rosters[0].participants[0].actor, str)
+        assert isinstance(match.rosters[0].stats["acesEarned"], int)
+        assert isinstance(match.rosters[0].participants[0].stats["items"][0], str)
 
     def test_matches(self, api):
-        matches = api.matches()
+        matches = api.matches(params={
+           "filter[createdAt-start]": "2017-02-12T00:00:00Z",
+           "filter[playerNames]": "Kraken"
+        })
         assert len(matches) > 0
         assert isinstance(matches[0], gamelocker.datatypes.Match)
         assert matches[0].duration > 0
 
     def test_region(self, api):
         assert len(api.matches(region="na",
-                               params={"filter[playerNames]": "Kraken"})) > 0
+                               params={
+                                   "filter[createdAt-start]": "2017-02-12T00:00:00Z",
+                                   "filter[playerNames]": "Kraken"
+                               })) > 0
         assert len(api.matches(region="eu",
-                               params={"filter[playerNames]": "Bayu"})) > 0
+                               params={
+                                   "filter[createdAt-start]": "2017-02-12T00:00:00Z",
+                                   "filter[playerNames]": "shutterfly"
+                               })) > 0
         assert len(api.matches(region="sg",
-                               params={"filter[playerNames]": "idmonfish"})) > 0
+                               params={
+                                   "filter[createdAt-start]": "2017-02-12T00:00:00Z",
+                                   "filter[playerNames]": "idmonfish"
+                               })) > 0
 
     def test_matchesfilters(self, api):
-        matches1 = api.matches({"page[limit]": 3})
+        matches1 = api.matches({
+            "filter[createdAt-start]": "2017-02-12T00:00:00Z",
+            "filter[playerNames]": "Kraken",
+            "page[limit]": 3
+        })
         assert len(matches1) == 3
-        matches2 = api.matches({"page[limit]": 3, "page[offset]": 1})
+        matches2 = api.matches({
+            "filter[createdAt-start]": "2017-02-12T00:00:00Z",
+            "filter[playerNames]": "Kraken",
+            "page[limit]": 3,
+            "page[offset]": 1
+        })
 
         commons = 0  # 3 matches each, offset 1 -> 2 overlap
         for match1 in matches1:
@@ -68,23 +79,31 @@ class TestGamelocker:
                     commons += 1
         assert commons == 2
 
-        # broken on server side
-#        assert len(api.matches({"page[limit]": 42})) == 42
-
-#        matches = api.matches({"page[limit]": 10, "sort": "duration"})
-#        assert matches[0].duration < matches[9].duration
+        assert len(api.matches(region="eu", params={
+            "filter[createdAt-start]": "2017-02-12T00:00:00Z",
+            "filter[playerNames]": "shutterfly",
+            "page[limit]": 9
+        })) == 9
 
         def fromiso(s):
             return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ")
 
-        start = "2017-01-10T02:25:00Z"
-        end = "2017-01-12T02:30:00Z"
-        matches = api.matches({"filter[createdAt-start]": start, "filter[createdAt-end]": end})
+        start = "2017-02-20T02:25:00Z"
+        end = "2017-02-22T02:30:00Z"
+        matches = api.matches({
+            "filter[playerNames]": "Kraken",
+            "filter[createdAt-start]": start,
+            "filter[createdAt-end]": end
+        })
         for match in matches:
             assert fromiso(end) >= fromiso(match.createdAt) >= fromiso(start)
 
         nick = "MMotooks123"
-        matches = api.matches({"page[limit]": 5, "filter[playerNames]": nick})
+        matches = api.matches({
+            "filter[createdAt-start]": "2017-02-10T00:00:00Z",
+            "page[limit]": 5,
+            "filter[playerNames]": nick
+        })
         for match in matches:
             success = False
             for roster in match.rosters:
@@ -94,8 +113,12 @@ class TestGamelocker:
                         break
             assert success
 
-        team = "HALO"
-        matches = api.matches({"page[limit]": 5, "filter[teamNames]": team})
+        team = "3TB3"
+        matches = api.matches(region="na", params={
+            "filter[createdAt-start]": "2017-02-10T00:00:00Z",
+            "page[limit]": 5,
+            "filter[teamNames]": team
+        })
         for match in matches:
             success = False
             for roster in match.rosters:
@@ -106,5 +129,5 @@ class TestGamelocker:
             assert success
 
     def test_player(self, api):
-        assert api.player("6abb30de-7cb8-11e4-8bd3-06eb725f8a76").name == "boombastic04"
-        assert "lossStreak" in api.player("6abb30de-7cb8-11e4-8bd3-06eb725f8a76").stats
+        assert api.player("57342aac-7ff5-11e5-98bf-0628b69bf6d1").name == "oldchoas"
+        assert "lossStreak" in api.player("57342aac-7ff5-11e5-98bf-0628b69bf6d1").stats

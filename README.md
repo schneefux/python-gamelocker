@@ -24,3 +24,8 @@ Example usage:
 ```
 
 [More examples](/examples)
+
+Running the tests:
+```bash
+GAMELOCKER_APIKEY=your.api.key PYTHONPATH=. python -m pytest tests
+```
