@@ -38,6 +38,18 @@ def rel(typ, key):
     return attr(typ, key, True)
 
 
+class Asset(DataMessage):
+    type_name = "asset"
+    key_id = attr(str, "id")
+
+    url = attr(str, "URL")
+    content_type = attr(str, "contentType")
+    created_at = attr(str, "createdAt")
+    description = attr(str, "description")
+    filename = attr(str, "filename")
+    name = attr(str, "name")
+
+
 class Player(DataMessage):
     type_name = "player"
     key_id = attr(str, "id")
@@ -85,6 +97,7 @@ class Match(DataMessage):
     stats = attr(dict, "stats")
 
     rosters = rel(Roster, "rosters")
+    assets = rel(Asset, "assets")
 
 
 def modulemap():

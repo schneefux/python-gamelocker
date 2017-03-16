@@ -41,6 +41,11 @@ class TestGamelocker:
         assert isinstance(matches[0], gamelocker.datatypes.Match)
         assert matches[0].duration > 0
 
+    def test_asset(self, api):
+        match = api.match(elid="f73274b2-0a7f-11e7-a28f-0206eb3a2f5b",
+                          region="eu")
+        assert isinstance(match.assets[0].url, str)
+
     def test_region(self, api):
         assert len(api.matches(region="na",
                                params={
