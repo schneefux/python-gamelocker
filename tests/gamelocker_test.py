@@ -22,7 +22,7 @@ class TestGamelocker:
         assert gamelocker.datatypes.modulemap()["match"] is gamelocker.datatypes.Match
 
     def test_match(self, api):
-        match = api.match("0955b904-fb19-11e6-802d-0667892d829e")
+        match = api.match("2245af82-b66c-11e7-95d2-0667892d829e")
         assert isinstance(match.gameMode, str)
         assert isinstance(match.rosters[0], gamelocker.datatypes.Roster)
         assert isinstance(match.rosters[0].participants[0], gamelocker.datatypes.Participant)
@@ -34,7 +34,8 @@ class TestGamelocker:
 
     def test_matches(self, api):
         matches = api.matches(params={
-           "filter[createdAt-start]": "2017-02-12T00:00:00Z",
+           "filter[createdAt-start]": "2017-09-12T00:00:00Z",
+           "filter[createdAt-end]": "2017-09-26T00:00:00Z",
            "filter[playerNames]": "Kraken"
         })
         assert len(matches) > 0
@@ -42,36 +43,41 @@ class TestGamelocker:
         assert matches[0].duration > 0
 
     def test_asset(self, api):
-        match = api.match(elid="f73274b2-0a7f-11e7-a28f-0206eb3a2f5b",
+        match = api.match(elid="1b178a8c-b66c-11e7-9757-0206eb3a2f5b",
                           region="eu")
         assert isinstance(match.assets[0].url, str)
 
     def test_region(self, api):
         assert len(api.matches(region="na",
                                params={
-                                   "filter[createdAt-start]": "2017-02-12T00:00:00Z",
+                                   "filter[createdAt-start]": "2017-09-12T00:00:00Z",
+                                   "filter[createdAt-end]": "2017-09-26T00:00:00Z",
                                    "filter[playerNames]": "Kraken"
                                })) > 0
         assert len(api.matches(region="eu",
                                params={
-                                   "filter[createdAt-start]": "2017-02-12T00:00:00Z",
+                                   "filter[createdAt-start]": "2017-09-12T00:00:00Z",
+                                   "filter[createdAt-end]": "2017-09-26T00:00:00Z",
                                    "filter[playerNames]": "shutterfly"
                                })) > 0
         assert len(api.matches(region="sg",
                                params={
-                                   "filter[createdAt-start]": "2017-02-12T00:00:00Z",
+                                   "filter[createdAt-start]": "2017-09-12T00:00:00Z",
+                                   "filter[createdAt-end]": "2017-09-26T00:00:00Z",
                                    "filter[playerNames]": "idmonfish"
                                })) > 0
 
     def test_matchesfilters(self, api):
         matches1 = api.matches({
-            "filter[createdAt-start]": "2017-02-12T00:00:00Z",
+            "filter[createdAt-start]": "2017-09-01T00:00:00Z",
+            "filter[createdAt-end]": "2017-09-28T00:00:00Z",
             "filter[playerNames]": "Kraken",
             "page[limit]": 3
         })
         assert len(matches1) == 3
         matches2 = api.matches({
-            "filter[createdAt-start]": "2017-02-12T00:00:00Z",
+            "filter[createdAt-start]": "2017-09-01T00:00:00Z",
+            "filter[createdAt-end]": "2017-09-28T00:00:00Z",
             "filter[playerNames]": "Kraken",
             "page[limit]": 3,
             "page[offset]": 1
@@ -85,7 +91,8 @@ class TestGamelocker:
         assert commons == 2
 
         assert len(api.matches(region="eu", params={
-            "filter[createdAt-start]": "2017-02-12T00:00:00Z",
+            "filter[createdAt-start]": "2017-09-01T00:00:00Z",
+            "filter[createdAt-end]": "2017-09-28T00:00:00Z",
             "filter[playerNames]": "shutterfly",
             "page[limit]": 9
         })) == 9
@@ -93,8 +100,8 @@ class TestGamelocker:
         def fromiso(s):
             return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ")
 
-        start = "2017-02-20T02:25:00Z"
-        end = "2017-02-22T02:30:00Z"
+        start = "2017-09-01T02:25:00Z"
+        end = "2017-09-28T02:30:00Z"
         matches = api.matches({
             "filter[playerNames]": "Kraken",
             "filter[createdAt-start]": start,
@@ -105,7 +112,8 @@ class TestGamelocker:
 
         nick = "MMotooks123"
         matches = api.matches({
-            "filter[createdAt-start]": "2017-02-10T00:00:00Z",
+            "filter[createdAt-start]": "2017-09-01T00:00:00Z",
+            "filter[createdAt-end]": "2017-09-28T00:00:00Z",
             "page[limit]": 5,
             "filter[playerNames]": nick
         })
@@ -120,7 +128,8 @@ class TestGamelocker:
 
         team = "3TB3"
         matches = api.matches(region="na", params={
-            "filter[createdAt-start]": "2017-02-10T00:00:00Z",
+            "filter[createdAt-start]": "2017-09-01T00:00:00Z",
+            "filter[createdAt-end]": "2017-09-28T00:00:00Z",
             "page[limit]": 5,
             "filter[teamNames]": team
         })
